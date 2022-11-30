@@ -25,3 +25,46 @@ mongoose.connection
   .on("open", () => console.log("Connected to Mongoose"))
   .on("close", () => console.log("Disconnected from Mongoose"))
   .on("error", (error) => console.log(error));
+
+////////////////////////////////////////////////
+// Our Models
+////////////////////////////////////////////////
+// pull schema and model from mongoose
+const { Schema, model } = mongoose;
+
+// make animals schema
+const animalsSchema = new Schema({
+  species: String,
+  location: String,
+  extinct: Boolean,
+  lifeExpectancy: Number,
+});
+
+// make animal model
+const Animal = model("Animal", animalsSchema);
+
+/////////////////////////////////////////////////
+// Create our Express Application Object
+/////////////////////////////////////////////////
+const app = express();
+
+/////////////////////////////////////////////////////
+// Middleware
+/////////////////////////////////////////////////////
+app.use(morgan("tiny")); //logging
+app.use(methodOverride("_method")); // override for put and delete requests from forms
+app.use(express.urlencoded({ extended: true })); // parse urlencoded request bodies
+app.use(express.static("public")); // serve files from public statically
+
+////////////////////////////////////////////
+// Routes
+////////////////////////////////////////////
+app.get("/", (req, res) => {
+  res.send("your server is running... better catch it.");
+});
+
+//////////////////////////////////////////////
+// Server Listener
+//////////////////////////////////////////////
+const PORT = process.env.PORT;
+app.listen(PORT, () => console.log(`Now Listening on port ${PORT}`));
