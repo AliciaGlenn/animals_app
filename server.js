@@ -64,7 +64,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/animals/seed", (req, res) => {
-  // array of starter aniamls - definie data we want to put in the database
+  // array of starter animal - definie data we want to put in the database
   const startAnimals = [
     { species: "cat", location: "egypt", extinct: false, lifeExpectancy: 10 },
     { species: "dog", location: "siberia", extinct: false, lifeExpectancy: 11 },
@@ -89,13 +89,19 @@ app.get("/animals/seed", (req, res) => {
   ];
 
   // Delete all animals
-  Animal.remove({}, (err, data) => {
-    // Seed Starter Animals
+  Animal.deleteMany({}, (err, data) => {
+    // Seed Starter Animals - create new animals once old animals are deleted
     Animal.create(startAnimals, (err, data) => {
       // send created aniamls as response to confirm creation
       res.json(data);
     });
   });
+});
+
+// index route - Get all animals from mongo and send them back
+app.get("/animals", async (req, res) => {
+  const animals = await Animal.find({});
+  res.json(animals);
 });
 
 //////////////////////////////////////////////
