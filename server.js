@@ -125,9 +125,10 @@ app.put("/animals/:id", (req, res) => {
   const id = req.params.id;
   // check if the extinct property should be true or false
   req.body.extinct = req.body.extinct === "on" ? true : false;
-  // update the fruit
+  // update the animal
   Animal.findByIdAndUpdate(id, req.body, { new: true }, (err, animal) => {
-    // redirect user back to main page when fruit
+    // redirect user back to main page
+    console.log("update animal:", animal);
     res.redirect("/animals");
   });
 });
