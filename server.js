@@ -63,6 +63,41 @@ app.get("/", (req, res) => {
   res.send("your server is running... better catch it.");
 });
 
+app.get("/animals/seed", (req, res) => {
+  // array of starter aniamls - definie data we want to put in the database
+  const startAnimals = [
+    { species: "cat", location: "egypt", extinct: false, lifeExpectancy: 10 },
+    { species: "dog", location: "siberia", extinct: false, lifeExpectancy: 11 },
+    {
+      species: "Woolly Mammoth",
+      location: "Africa",
+      extinct: true,
+      lifeExpectancy: 60,
+    },
+    {
+      species: "dinosaur",
+      location: "South America",
+      extinct: true,
+      lifeExpectancy: 50,
+    },
+    {
+      species: "toucan",
+      location: "Mexico",
+      extinct: false,
+      lifeExpectancy: 20,
+    },
+  ];
+
+  // Delete all animals
+  Animal.remove({}, (err, data) => {
+    // Seed Starter Animals
+    Animal.create(startAnimals, (err, data) => {
+      // send created aniamls as response to confirm creation
+      res.json(data);
+    });
+  });
+});
+
 //////////////////////////////////////////////
 // Server Listener
 //////////////////////////////////////////////
