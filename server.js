@@ -101,7 +101,68 @@ app.get("/animals/seed", (req, res) => {
 // index route - Get all animals from mongo and send them back
 app.get("/animals", async (req, res) => {
   const animals = await Animal.find({});
-  res.json(animals);
+  res.render("animals/index.ejs", { animals });
+});
+
+// new route
+app.get("/animals/new", (req, res) => {
+  res.render("animals/new.ejs");
+});
+
+app.delete("/animals/:id", (req, res) => {
+  // get the id from params
+  const id = req.params.id;
+  // delete the animal
+  Animal.findByIdAndRemove(id, (err, animal) => {
+    // redirect user back to index page
+    res.redirect("/animals");
+  });
+});
+
+//update route
+app.put("/animals/:id", (req, res) => {
+  // get the id from params
+  const id = req.params.id;
+  // check if the extinct property should be true or false
+  req.body.extinct = req.body.extinct === "on" ? true : false;
+  // update the fruit
+  Animal.findByIdAndUpdate(id, req.body, { new: true }, (err, animal) => {
+    // redirect user back to main page when fruit
+    res.redirect("/animals");
+  });
+});
+
+// create route
+app.post("/animals", (req, res) => {
+  // check if the Extinct property is true or false
+  req.body.extinct = req.body.extinct === "on" ? true : false;
+  // create the new animal
+  Animal.create(req.body, (err, animal) => {
+    // redirect the user back to the main animals page after animal is created
+    res.redirect("/animals");
+  });
+});
+
+// edit route
+app.get("/animals/:id/edit", (req, res) => {
+  // get the id from params
+  const id = req.params.id;
+  // get the animal from the database
+  Animal.findById(id, (err, animal) => {
+    // render template and send it animal
+    res.render("animals/edit.ejs", { animal });
+  });
+});
+
+// show route
+app.get("/animals/:id", (req, res) => {
+  // get the id from params
+  const id = req.params.id;
+  // find the particular animal from the database
+  Animal.findById(id, (err, animal) => {
+    // render the template with the data from the database
+    res.render("animals/show.ejs", { animal });
+  });
 });
 
 //////////////////////////////////////////////
